@@ -1,0 +1,12 @@
+# Analysis workspaces
+/outputs/
+/.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+*.nbc
+*.nbi
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
