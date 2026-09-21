@@ -1,4 +1,4 @@
-# SHIFT: Aiming the wrong way for the right reasons
+#Aiming the wrong way for the right reasons
 
 **A generative model of how people infer changes in their environment and choose movement strategies.**
 
