@@ -1,90 +1,53 @@
 # SHIFT: Aiming the wrong way for the right reasons
 
-Code and data for Chapter 3 of Max Townsend's PhD thesis. The analyses compare Spectral Hierarchical Inference of Field Transformations (SHIFT) with Q-HMM across three experiments: target geometry (Ding), strategic savings, and target-specific perturbations (wildcard).
+**A generative model of how people infer changes in their environment and choose movement strategies.**
 
-All raw data, processed data and saved model fits are included using Git LFS. The data and fits total approximately 744 MiB. Download them before running the checks or analyses below.
+People can respond to the same visual perturbation with very different strategies, including initially aiming in the wrong direction. SHIFT (**Spectral Hierarchical Inference of Field Transformations**) models behaviour through Bayesian inference over possible transformations between an action and its visual consequences.
 
-## Setup
+Research code and data from **Max Townsend's PhD in computational cognitive science**, supporting *Aiming the wrong way for the right reasons* (**manuscript in preparation**).
 
-Install Python 3.11 and Git LFS, then clone the repository and create the environment:
+[Request the manuscript](mailto:max.o.b.townsend@gmail.com?subject=Request%3A%20Aiming%20the%20wrong%20way%20for%20the%20right%20reasons) · [Reproduction guide](docs/REPRODUCING.md) · [Contact](mailto:max.o.b.townsend@gmail.com)
+
+## What is included
+
+- **Human behavioural modelling:** trial-by-trial inference and predictive distributions for heterogeneous aiming behaviour.
+- **Three experimental settings:** target geometry (Ding), strategic savings and target-specific perturbations (wildcard), with SHIFT and Q-HMM model comparisons.
+- **Reproducible analysis:** raw and processed data, saved fits, figure recipes, statistical analyses, checkpointed fitting and a fitting smoke test.
+
+**Stack:** Python · NumPy / SciPy · Numba · CMA-ES · pandas · Matplotlib / seaborn.
+
+## Explore the code
+
+| Start here | What to look for |
+|---|---|
+| [SHIFT model](src/models/BayesHypothesisTesting.py) | Bayesian inference, structural hypotheses and predictive sampling |
+| [Q-HMM comparison](src/models/HMM.py) | Alternative model of trial-by-trial behaviour |
+| [Fitting workflows](src/chapter3/fitting.py) | Dataset-specific estimation and saved checkpoints |
+| [Figure recipes](src/chapter3/figures.py) | Human/model comparisons across experiments |
+| [Reproduction entry point](reproduce.py) | Named tasks, isolated output workspaces and run logs |
+
+## Reproduce a figure
+
+Install **Python 3.11** and **Git LFS**. Data and saved fits require approximately **744 MiB** of LFS downloads.
 
 ```powershell
 git lfs install
-git clone https://github.com/Max-Townsend/SHIFT.git
-cd SHIFT
+git clone https://github.com/Max-Townsend/aiming_the_wrong_way_for_the_right_reasons.git
+cd aiming_the_wrong_way_for_the_right_reasons
 git lfs pull
-python -m venv .venv
+py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python reproduce.py verify
-```
-
-On macOS/Linux, activate the environment with `source .venv/bin/activate`.
-
-## Figures and statistics
-
-The supplied fits can be used directly:
-
-```powershell
-python reproduce.py list
 python reproduce.py run figure33
-python reproduce.py all
 ```
 
-| Task | Output |
-|---|---|
-| `figure31` | Model and target-geometry schematics |
-| `figure32` | Ding learning, generalisation and model comparisons |
-| `figure33` | Savings learning curves and model comparisons |
-| `figure34` | Wildcard learning, target-specificity and model comparisons |
-| `geometry` | Target-geometry illustration |
-| `statistics` | Ding parameter and structural-belief tests; wildcard learning statistics |
-| `manuscript-statistics` | Generalisation, early structural-belief and parameter analyses |
-| `demographics` | Wildcard participant summary |
+On macOS/Linux, create the environment with `python3.11 -m venv .venv` and activate it with `source .venv/bin/activate`.
 
-`all` runs the four figure tasks and all three statistical summaries. Full figure runs include participant plots and 10,000-sample energy scores, which can take substantial time. The exported panels support the thesis figures; final page composition and labels were arranged in Illustrator.
+`figure33` uses the supplied fits to reproduce the strategic-savings analyses. Outputs and run logs go to `outputs/reproduction/`. Figure numbers retain the thesis Chapter 3 numbering. See the [reproduction guide](docs/REPRODUCING.md) for all figures, statistics, reduced checks and refitting. Full refitting can take days.
 
-Code and inputs are copied to `outputs/<workspace>/`, with `reproduction` as the default workspace. Figures, tables, checkpoints and run logs are written there. Use `--workspace <name>` to create a separate run, and choose a new name after changing code or inputs.
+## Paper and contact
 
-## Fit from raw data
+Townsend, M., Warburton, M., Campagnoli, C., Mon-Williams, M., Mushtaq, F., & Morehead, J. R. **Aiming the wrong way for the right reasons.** Manuscript in preparation; available on request.
 
-```powershell
-$env:SHIFT_CORES = '4'
-python reproduce.py all --from-scratch --workspace fresh-refit
-```
-
-On macOS/Linux, set the worker count with `export SHIFT_CORES=4`.
-
-This preprocesses the three datasets, fits both models, recovers wildcard weights, and runs the figures and statistics. It requires a new workspace. Demographics use the supplied linked participant table. Full fitting can take days, and stochastic optimisation can produce different estimates from the supplied fits.
-
-To resume an interrupted fit, run its task in the same workspace, then continue with the remaining tasks:
-
-```powershell
-python reproduce.py run fit-ding-shift --workspace fresh-refit
-```
-
-Fitting task names follow `fit-<dataset>-<model>`, where datasets are `ding`, `savings`, and `wildcard`, and models are `shift` and `qhmm`. `preprocess` prepares the data, and `recover-weights` calculates wildcard local/global weights from the SHIFT fit.
-
-## Checks
-
-`python reproduce.py verify` checks required files, Git LFS downloads and Python syntax. The fitting smoke test uses small trial subsets to check all six fitting tasks, saved fits and checkpoint resume:
-
-```powershell
-python scripts/smoke_test.py --workspace fit-check
-```
-
-Use a new workspace or `--run-name` for each smoke test. `check-figure32` and `check-figure34` run reduced plotting checks; their sample counts are for testing.
-
-## Project layout
-
-| Location | Contents |
-|---|---|
-| `src/chapter3/` | Data preparation, fitting, figures and statistics |
-| `src/models/` | SHIFT and Q-HMM implementations |
-| `src/preprocessing/` | Data conversion and demographic summaries |
-| `src/analysis/` | Energy scores, learning metrics and plotting helpers |
-| `data/raw/` | Experimental inputs |
-| `data/processed/` | Analysis-ready data and linked demographics |
-| `data/fits/` | Saved fits and wildcard weight estimates |
-| `scripts/` | Fitting smoke test |
-| `outputs/` | Analysis workspaces; ignored by Git |
+For the manuscript or questions about the model, contact [max.o.b.townsend@gmail.com](mailto:max.o.b.townsend@gmail.com).
