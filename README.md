@@ -1,8 +1,8 @@
 # Aiming the wrong way for the right reasons
 
-People sometimes aim in the wrong direction after visual feedback changes. SHIFT is a Bayesian model of how people infer the relationship between their actions and visual feedback, and how those beliefs shape their aiming strategies. The name stands for Spectral Hierarchical Inference of Field Transformations.
+People sometimes aim in the wrong direction after visual feedback changes. Spectral Hierarchical Inference of Field Transformations (SHIFT) is a Bayesian model of how people infer the relationship between their actions and visual feedback, and how those beliefs shape their aiming strategies.
 
-This repository contains Python code, experimental data and saved fits. The analyses compare SHIFT with Q-HMM across three datasets: target geometry (Ding), strategic savings and target-specific perturbations (wildcard).
+This repository contains Python code, experimental data and saved fits. The analyses compare SHIFT with Q-HMM across three datasets: target geometry (Ding), strategic savings, and target-specific perturbations (wildcard).
 
 ## Run an analysis
 
